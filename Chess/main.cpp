@@ -93,11 +93,23 @@ int     selectedRow = 1, selectedCol = 1;
 int     moveToRow = 1, moveToCol = 1;
 bool    selected = false;
 bool    board_rotating = true;
-bool    ai_moving = false;
 int     rotation = 0;
 bool    check = false, checkMate = false;
 bool    closeGame = false;
 bool	needPromote = false;
+
+/**
+    AI Settings ss
+*/
+bool    ai_moving = false;
+int     aiTypeIndex = 1;
+enum AIColour
+{
+    None = 0,
+	White = 1,
+	Black = 2
+};
+AIColour aiColour = None;
 
 /**
     Chess board vertices
@@ -550,6 +562,11 @@ void newAITurn()
 	bool moveMade = player->chooseAIMove(&move);
 	if (!moveMade)
 	{
+		// if not in check
+		// and not in checkmate
+		// and no move made meaning no moves available
+		// then it is a stalemate
+		// TODO: end game due to stalemate
 		return; // TODO: if this is the case - what next? The chess engine should have detected a checkmate prior to this. 
 	}
 
@@ -813,6 +830,18 @@ void keyFunction(unsigned char key, int x, int y)
 				chess->replaceBoard(boardCopy);
 			break;
 
+		case 'p': case 'P':
+            chess->cyclePlayerAI();
+			//chess->toggleWhiteAI(AIType::First);
+			//chess->toggleBlackAI(AIType::Smart);
+   //         
+			//if (!inGame)
+			//{
+			//	inGame = true;
+			//	//chess->setTurnColor(PieceColor::WHITE);
+			//}
+			break;
+
 		default: break;
     }
 }
@@ -843,7 +872,7 @@ void initialize()
 
 void newGame()
 {
-    chess = new Game();
+    chess = new Game((AIType)aiTypeIndex);
     selectedRow = 1; selectedCol = 1;
     moveToRow = 1; moveToCol = 1;
     selected = false;

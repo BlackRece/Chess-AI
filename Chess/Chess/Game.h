@@ -29,7 +29,7 @@ class Game
 		std::vector<std::shared_ptr<Piece>> m_vecPieces;
 
 	public:
-		Game();
+		Game(int aiTypeIndex);
 		~Game();
 
 		void setInitialPieces(PieceColor color);
@@ -53,7 +53,11 @@ class Game
 
 		ChessPlayer* getBlackPlayer() { return m_PlayerBlack;}
 		ChessPlayer* getWhitePlayer() { return m_PlayerWhite; }
-		
+		void toggleWhiteAI(AIType aiType) { m_PlayerWhite->setAI(aiType); }
+		void toggleBlackAI(AIType aiType) { m_PlayerBlack->setAI(aiType); }
+		void resetAI() { m_PlayerWhite->setAI(AIType::None); m_PlayerBlack->setAI(AIType::None); }
+		int m_aiStateId;
+		void cyclePlayerAI();
 };
 
 #endif

@@ -8,6 +8,7 @@ it contains Square objects (which contain a piece, or is empty).
 
 #include "Square.h"
 #include <memory>
+#include <map>
 
 class Board
 {
@@ -16,8 +17,9 @@ public:
 		static const int HEIGHT = 8;
 
 	private:
-
+		std::map<std::pair<int, int>, int> piecePositionScoreMap;
 		Square squares[WIDTH][HEIGHT];
+		
 	public:
 		static const int MIN_COL_INDEX = 0;
 		static const int MIN_ROW_INDEX = 0;
@@ -28,6 +30,7 @@ public:
 		Board(const Board& board);
 
 		Square* getSquare(int row, int col);
+		int getPiecePositionScore(std::pair<int, int> pos);
 
 		Board* hardCopy();
 		

@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "..\ChessPlayer.h"
 
-Game::Game()
+Game::Game(int aiTypeIndex)
 {
 	gameplay = new Gameplay();
 	board = new Board();
@@ -10,7 +10,7 @@ Game::Game()
 	setInitialPieces(PieceColor::BLACK);
 	turn = 1;
 
-	ChessPlayer::setupPlayers(&m_PlayerWhite, &m_PlayerBlack ,board, status, gameplay);
+	ChessPlayer::setupPlayers(&m_PlayerWhite, &m_PlayerBlack ,board, status, gameplay, (AIType)aiTypeIndex);
 
 	int x = 1;
 }
@@ -176,4 +176,32 @@ PieceColor Game::getTurnColor()
 bool Game::promote(int row, int col, PieceType type)
 {
 	return gameplay->pawnPromotion(board, row, col, type);
+}
+
+void Game::cyclePlayerAI()
+{
+	//m_aiStateId++;
+	if (m_aiStateId++ > 3)
+		m_aiStateId = 0;
+	
+	switch (m_aiStateId)
+	{
+	case 0:
+		resetAI();
+		//toggleWhiteAI(AIType::None);
+		//toggleBlackAI(AIType::None);
+		break;
+	case 1:
+		toggleWhiteAI(AIType::Smart);
+		toggleBlackAI(AIType::None);
+		break;
+	case 2:
+		toggleWhiteAI(AIType::None);
+		toggleBlackAI(AIType::Smart);
+		break;
+	case 3:
+		toggleWhiteAI(AIType::Smart);
+		toggleBlackAI(AIType::Smart);
+		break;
+	}
 }
